@@ -1,20 +1,19 @@
-import {createStore, combineReducers, applyMiddleware} from 'redux';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
-import { dishes } from './dishes';
-import { comments } from './comments';
-import { promotions } from './promotions';
-import { leaders } from './leaders';
-import { favorites } from './favorites';
+import { Patients } from './patients';
+import { Robots } from './robots';
+import { Auth } from './auth';
+import { Users } from './users';
+
 
 export const ConfigureStore = () => {
     const store = createStore(
         combineReducers({
-            dishes,
-            comments,
-            promotions,
-            leaders,
-            favorites
+            patients: Patients,
+            robots: Robots,
+            auth:Auth,
+            users:Users
         }),
         applyMiddleware(thunk, logger)
     );

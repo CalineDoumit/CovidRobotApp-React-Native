@@ -1,9 +1,394 @@
 import * as ActionTypes from './ActionTypes';
 import { baseUrl } from '../shared/baseUrl';
 
-export const fetchComments = () => (dispatch) => {
-    return fetch(baseUrl + 'comments')
+
+export const fetchRobots = () => (dispatch) => {
+  dispatch(robotsLoading());
+
+  return fetch(baseUrl + 'robots')
     .then(response => {
+      if (response.ok) {
+        return response;
+      } else {
+        var error = new Error('Error ' + response.status + ': ' + response.statusText);
+        error.response = response;
+        throw error;
+      }
+    },
+      error => {
+        var errmess = new Error(error.message);
+        console.log("erreur 2: errmess");
+
+        throw errmess;
+      })
+    .then(response => response.json())
+    .then(robots => dispatch(addRobots(robots)))
+    .catch(error => dispatch(robotsFailed(error.message)));
+}
+
+export const robotsLoading = () => ({
+  type: ActionTypes.ROBOTS_LOADING
+});
+
+export const robotsFailed = (errmess) => ({
+  type: ActionTypes.ROBOTS_FAILED,
+  payload: errmess
+});
+
+export const addRobots = (robots) => ({
+  type: ActionTypes.ADD_ROBOTS,
+  payload: robots
+});
+
+export const fetchPatients = () => (dispatch) => {
+  dispatch(patientsLoading());
+
+  return fetch(baseUrl + 'patients')
+    .then(response => {
+      if (response.ok) {
+        return response;
+      } else {
+        var error = new Error('Error ' + response.status + ': ' + response.statusText);
+        error.response = response;
+        throw error;
+      }
+    },
+      error => {
+        var errmess = new Error(error.message);
+        throw errmess;
+      })
+    .then(response => response.json())
+    .then(patients => dispatch(addPatients(patients)))
+    .catch(error => dispatch(patientsFailed(error.message)));
+}
+
+export const patientsLoading = () => ({
+  type: ActionTypes.PATIENTS_LOADING
+});
+
+export const patientsFailed = (errmess) => ({
+  type: ActionTypes.PATIENTS_FAILED,
+  payload: errmess
+});
+
+export const addPatients = (patients) => ({
+  type: ActionTypes.ADD_PATIENTS,
+  payload: patients
+});
+
+export const loginUser = (creds) => (dispatch) => {
+  // We dispatch requestLogin to kickoff the call to the API
+  dispatch(requestLogin(creds))
+
+  return fetch(baseUrl + 'users/login', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(creds)
+  })
+    .then(response => {
+      if (response.ok) {
+        console.log("ERRORRRRR 00000000000000000")
+
+        return response;
+      } else {
+        var error = new Error('Error ' + response.status + ': ' + response.statusText);
+        error.response = response;
+        console.log("ERRORRRRR 1111111111111111111111111111")
+        throw error;
+      }
+    },
+      error => {
+        console.log("ERRORRRRR 2222222222222222222222222")
+
+        throw error;
+      })
+    .then(response => response.json())
+    .then(response => {
+      if (response.success) {
+        // If login was successful, set the token in local storage
+        localStorage.setItem('token', response.token);
+        localStorage.setItem('creds', JSON.stringify(creds));
+        localStorage.setItem('userRole', response.userRole);
+        // Dispatch the success action
+        dispatch(receiveLogin(response));
+        console.log("----------------------------");
+        console.log("Login Successful");
+        console.log("user role : " + response.userRole);
+        console.log("----------------------------");
+
+      }
+      else {
+        var error = new Error('Error ' + response.status);
+        error.response = response;
+        throw error;
+      }
+    })
+    .catch(error => dispatch(loginError(error.message)))
+};
+export const requestLogin = (creds) => {
+  return {
+    type: ActionTypes.LOGIN_REQUEST,
+    creds
+  }
+}
+
+export const receiveLogin = (response) => {
+  return {
+    type: ActionTypes.LOGIN_SUCCESS,
+    token: response.token
+  }
+}
+
+export const loginError = (message) => {
+  return {
+    type: ActionTypes.LOGIN_FAILURE,
+    message
+  }
+}
+
+
+export const fetchUsers = () => (dispatch) => {
+  dispatch(usersLoading());
+
+  return fetch(baseUrl + 'users')
+    .then(response => {
+      if (response.ok) {
+        return response;
+      } else {
+        var error = new Error('Error ' + response.status + ': ' + response.statusText);
+        error.response = response;
+        throw error;
+      }
+    },
+      error => {
+        var errmess = new Error(error.message);
+        console.log("erreur 2: errmess");
+
+        throw errmess;
+      })
+    .then(response => response.json())
+    .then(robots => dispatch(addUsers(robots)))
+    .catch(error => dispatch(usersFailed(error.message)));
+}
+
+export const usersLoading = () => ({
+  type: ActionTypes.USERS_LOADING
+});
+
+export const usersFailed = (errmess) => ({
+  type: ActionTypes.USERS_FAILED,
+  payload: errmess
+});
+
+export const addUsers = (users) => ({
+  type: ActionTypes.ADD_USERS,
+  payload: users
+});
+
+export const postDeactivatePatient = (patientId) => (dispatch) => {
+  console.log("patientID"+patientId)
+  return fetch(baseUrl + 'patients/' + patientId  +'/deassignRobot', {
+    method: "POST",
+    body: '',
+    headers: {
+      'Content-Type':'application/json'
+    },
+    credentials: "same-origin"
+  })
+    .then(response => {
+      if (response.ok) {
+        return response;
+      } else {
+        var error = new Error('Error ' + response.status + ': ' + response.statusText);
+        error.response = response;
+        throw error;
+      }
+    },
+      error => {
+        throw error;
+      })
+    .then(response => response.json())
+    .then(() => { console.log("Patient Desactivated"); })
+    .catch(error => {console.log("Patient Desactivated"+ error.message)})
+    //dispatch(favoritesFailed(error.message))
+}
+
+/*
+export const fetchUser = (userId) => (dispatch) => {
+  dispatch(usersLoading());
+
+  return fetch(baseUrl + 'users')
+    .then(response => {
+      if (response.ok) {
+        return response;
+      } else {
+        var error = new Error('Error ' + response.status + ': ' + response.statusText);
+        error.response = response;
+        throw error;
+      }
+    },
+      error => {
+        var errmess = new Error(error.message);
+        console.log("erreur 2: errmess");
+
+        throw errmess;
+      })
+    .then(response => response.json())
+    .then(robots => dispatch(addUsers(robots)))
+    .catch(error => dispatch(usersFailed(error.message)));
+}
+*/
+
+
+export const fetchRobotGo = (robotId) => (dispatch) => {
+  alert("fetna bel fetch")
+  return fetch(baseUrl + 'robots/' + robotId+ '/RobotGo')
+
+  .then(response => {
+      if (response.ok) {
+        return response;
+      } else {
+        var error = new Error('Error ' + response.status + ': ' + response.statusText);
+        error.response = response;
+        throw error;
+      }
+    },
+    error => {
+          throw error;
+    })
+
+  .then(response => response.json())
+  .then(() => { console.log('Order GO Success!'); })
+  .catch(error =>{console.log("Order GO Fail!"+ error.message)})
+}
+
+export const fetchRobotCome = (robotId) => (dispatch) => {
+  alert("fetna bel fetch")
+  return fetch(baseUrl + 'robots/' + robotId+ '/RobotCome')
+
+  .then(response => {
+      if (response.ok) {
+        return response;
+      } else {
+        var error = new Error('Error ' + response.status + ': ' + response.statusText);
+        error.response = response;
+        throw error;
+      }
+    },
+    error => {
+          throw error;
+    })
+
+  .then(response => response.json())
+  .then(() => { console.log('Order COME Success!'); })
+  .catch(error =>{console.log("Order COME Fail!"+ error.message)})
+}
+
+export const fetchRobotStop = (robotId) => (dispatch) => {
+  alert("fetna bel fetch")
+  return fetch(baseUrl + 'robots/' + robotId+ '/RobotStop')
+
+  .then(response => {
+      if (response.ok) {
+        return response;
+      } else {
+        var error = new Error('Error ' + response.status + ': ' + response.statusText);
+        error.response = response;
+        throw error;
+      }
+    },
+    error => {
+          throw error;
+    })
+
+  .then(response => response.json())
+  .then(() => { console.log('Order STOP Success!'); })
+  .catch(error =>{console.log("Order STOP Fail!"+ error.message)})
+}
+
+export const postPatient = (values) => (dispatch) => {
+  alert("values:",values)
+  return fetch(baseUrl + 'users/createPatient', {
+      method: "POST",
+      body: JSON.stringify(values),
+      headers: {
+        "Content-Type": "application/json"
+      },
+      credentials: "same-origin"
+  })
+  .then(response => {
+      if (response.ok) {
+        return response;
+      } else {
+        var error = new Error('Error ' + response.status + ': ' + response.statusText);
+        error.response = response;
+        throw error;
+      }
+    },
+    error => {
+          throw error;
+    })
+  .then(response => response.json())
+  .then(response => { console.log('Patient', response);})
+  .catch(error =>  { console.log('Patient', error.message);})
+};
+
+export const postNurse = (values) => (dispatch) => {
+  alert("values:",values)
+  return fetch(baseUrl + 'users/createNurse', {
+      method: "POST",
+      body: JSON.stringify(values),
+      headers: {
+        "Content-Type": "application/json"
+      },
+      credentials: "same-origin"
+  })
+  .then(response => {
+      if (response.ok) {
+        return response;
+      } else {
+        var error = new Error('Error ' + response.status + ': ' + response.statusText);
+        error.response = response;
+        throw error;
+      }
+    },
+    error => {
+          throw error;
+    })
+  .then(response => response.json())
+  .then(response => { console.log('Nurse', response);})
+  .catch(error =>  { console.log('Nurse', error.message);})
+};
+
+/*export const postDeactivatePatient=(patientId)=>{
+  // POST request using fetch with error handling
+  const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json','Access-Control-Allow-Origin': '*'  },
+  };
+  fetch(baseUrl+patientId+'/deassignRobot', requestOptions)
+      .then(async response => {
+          const data = await response.json();
+          // check for error response
+          if (!response.ok) {
+              // get error message from body or default to response status
+              const error = (data && data.message) || response.status;
+              return Promise.reject(error);
+          }
+          this.setState({ postId: data.err })
+      })
+      .catch(error => {
+          this.setState({ errorMessage: error.toString() });
+          console.error('There was an error!', error);
+      });
+  }*/
+
+  export const fetchPatientsNotActive = () => (dispatch) => {
+  
+    return fetch(baseUrl + 'users/PatientIsNotActive')
+      .then(response => {
         if (response.ok) {
           return response;
         } else {
@@ -12,164 +397,73 @@ export const fetchComments = () => (dispatch) => {
           throw error;
         }
       },
+        error => {
+          var errmess = new Error(error.message);
+          console.log("erreur 2: errmess");
+  
+          throw errmess;
+        })
+      .then(response => response.json())
+      .then(users => dispatch(addInactiveUsers(users)))
+     //.catch(error => dispatch(robotsFailed(error.message)));
+  }
+
+  export const addInactiveUsers = (users) => ({
+    type: ActionTypes.ADD_INACTIVEUSERS,
+    payload: users
+  });
+
+
+  
+export const requestLogout = () => {
+  return {
+    type: ActionTypes.LOGOUT_REQUEST
+  }
+}
+
+export const receiveLogout = () => {
+  return {
+    type: ActionTypes.LOGOUT_SUCCESS
+  }
+}
+
+// Logs the user out
+export const logoutUser = () => (dispatch) => {
+  dispatch(requestLogout())
+  localStorage.removeItem('token');
+  localStorage.removeItem('creds');
+  localStorage.removeItem('userRole');
+  dispatch(receiveLogout())
+}
+
+
+export const fetchCorrespondingPatient = (robotId) => (dispatch) => {
+  //dispatch(patientsLoading());
+  //alert("robotID: "+ robotId)
+  return fetch(baseUrl +'robots/'+robotId+ '/getCorrespondingPatient')
+    .then(response => {
+      if (response.ok) {
+        return response;
+      } else {
+        var error = new Error('Error ' + response.status + ': ' + response.statusText);
+        error.response = response;
+        throw error;
+      }
+    },
       error => {
-            var errmess = new Error(error.message);
-            throw errmess;
+        var errmess = new Error(error.message);
+        console.log("erreur 2: errmess");
+
+        throw errmess;
       })
     .then(response => response.json())
-    .then(comments => dispatch(addComments(comments)))
-    .catch(error => dispatch(commentsFailed(error.message)));
-};
+    .then(patient => dispatch(addCorrespondingPatient(patient)))
+    .catch(error => dispatch(patientsFailed(error.message)));
+}
 
-export const commentsFailed = (errmess) => ({
-    type: ActionTypes.COMMENTS_FAILED,
-    payload: errmess
-});
-
-export const addComments = (comments) => ({
-    type: ActionTypes.ADD_COMMENTS,
-    payload: comments
-});
-
-export const fetchDishes = () => (dispatch) => {
-
-    dispatch(dishesLoading());
-
-    return fetch(baseUrl + 'dishes')
-    .then(response => {
-        if (response.ok) {
-          return response;
-        } else {
-          var error = new Error('Error ' + response.status + ': ' + response.statusText);
-          error.response = response;
-          throw error;
-        }
-      },
-      error => {
-            var errmess = new Error(error.message);
-            throw errmess;
-      })
-    .then(response => response.json())
-    .then(dishes => dispatch(addDishes(dishes)))
-    .catch(error => dispatch(dishesFailed(error.message)));
-};
-
-export const dishesLoading = () => ({
-    type: ActionTypes.DISHES_LOADING
-});
-
-export const dishesFailed = (errmess) => ({
-    type: ActionTypes.DISHES_FAILED,
-    payload: errmess
-});
-
-export const addDishes = (dishes) => ({
-    type: ActionTypes.ADD_DISHES,
-    payload: dishes
-});
-
-export const fetchPromos = () => (dispatch) => {
-    
-    dispatch(promosLoading());
-
-    return fetch(baseUrl + 'promotions')
-    .then(response => {
-        if (response.ok) {
-            return response;
-        } else {
-            var error = new Error('Error ' + response.status + ': ' + response.statusText);
-            error.response = response;
-            throw error;
-        }
-        },
-        error => {
-            var errmess = new Error(error.message);
-            throw errmess;
-        })
-    .then(response => response.json())
-    .then(promos => dispatch(addPromos(promos)))
-    .catch(error => dispatch(promosFailed(error.message)));
-};
-
-export const promosLoading = () => ({
-    type: ActionTypes.PROMOS_LOADING
-});
-
-export const promosFailed = (errmess) => ({
-    type: ActionTypes.PROMOS_FAILED,
-    payload: errmess
-});
-
-export const addPromos = (promos) => ({
-    type: ActionTypes.ADD_PROMOS,
-    payload: promos
-});
-
-export const fetchLeaders = () => (dispatch) => {
-    
-    dispatch(leadersLoading());
-
-    return fetch(baseUrl + 'leaders')
-    .then(response => {
-        if (response.ok) {
-            return response;
-        } else {
-            var error = new Error('Error ' + response.status + ': ' + response.statusText);
-            error.response = response;
-            throw error;
-        }
-        },
-        error => {
-            var errmess = new Error(error.message);
-            throw errmess;
-        })
-    .then(response => response.json())
-    .then(leaders => dispatch(addLeaders(leaders)))
-    .catch(error => dispatch(leadersFailed(error.message)));
-};
-
-export const leadersLoading = () => ({
-    type: ActionTypes.LEADERS_LOADING
-});
-
-export const leadersFailed = (errmess) => ({
-    type: ActionTypes.LEADERS_FAILED,
-    payload: errmess
-});
-
-export const addLeaders = (leaders) => ({
-    type: ActionTypes.ADD_LEADERS,
-    payload: leaders
-});
-
-export const postFavorite = (dishId)  => (dispatch) => {
-    setTimeout(() => {
-        dispatch(addFavorite(dishId));
-    }, 2000);
-};
-
-export const addFavorite = (dishId) => ({
-    type: ActionTypes.ADD_FAVORITE,
-    payload: dishId
-});
-
-export const addComment = (comment) => ({
-    type: ActionTypes.ADD_COMMENT,
-    payload: comment
-});
-
-export const postComment = (dishId, rating, comment, author) => (dispatch) => {
-
-    const newComment = {
-        author: author,
-        comment: comment,
-        dishId: dishId,
-        rating: rating,
-    };
-    newComment.date = new Date().toISOString();
-
-    setTimeout(() => {
-        dispatch(addComment(newComment));
-    }, 2000);
-
-}; 
+export const addCorrespondingPatient = (patient) => {
+  return {
+    type: ActionTypes.ADD_CORRESPONDINGPATIENT,
+    payload:patient
+  }
+}
