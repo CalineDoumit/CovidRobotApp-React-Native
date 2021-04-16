@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import NurseMenuScreen from './NurseMenuComponent';
+import PatientDetailScreen from './PatientDetailComponent';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createDrawerNavigator } from 'react-navigation-drawer';
@@ -17,11 +18,6 @@ const mapDispatchToProps = dispatch => ({
   fetchRobots: () => { dispatch(fetchRobots()) },
 })
 
-const NursePage = () => {
-  return (
-    <p>Hello</p>
-  );
-}
 
 const navConfig = {
   defaultNavigationOptions: {
@@ -37,8 +33,8 @@ const navConfig = {
 
 const NurseMenuNavigator = createStackNavigator(
   {
-    NurseMenu: NurseMenuScreen,
-    //PatientDetail: PatientDetailScreen,
+    //NurseMenu: NurseMenuScreen,
+    PatientDetail: PatientDetailScreen,
   },
   {
     //initialRouteName: 'Menu',
