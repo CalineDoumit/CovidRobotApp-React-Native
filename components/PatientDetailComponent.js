@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 const mapStateToProps = state => {
     return {
         robots: state.robots,
-        patients:state.patients
+        //patients:state.patients
     }
 }
 
@@ -57,7 +57,8 @@ class PatientDetail extends Component {
     }
 
     render(){
-        return(<Text>TEST</Text>);
+       // const dishId = this.props.navigation.getParam('patientId','');
+        return(<Text>TEST </Text>);
         
     }
 
