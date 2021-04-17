@@ -13,6 +13,7 @@ export const Auth = (state = {
 }, action) => {
     switch (action.type) {
         case ActionTypes.LOGIN_REQUEST:
+            console.log("payload: "+ JSON.stringify(action.creds))
             return {
                 ...state,
                 isLoading: true,
@@ -22,6 +23,8 @@ export const Auth = (state = {
 
             };
         case ActionTypes.LOGIN_SUCCESS:
+            console.log("login success: "+ JSON.stringify(action.userRole))
+
             return {
                 ...state,
                 isLoading: false,

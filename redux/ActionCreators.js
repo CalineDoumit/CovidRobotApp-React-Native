@@ -79,11 +79,13 @@ export const addPatients = (patients) => ({
 export const loginUser = (creds) => (dispatch) => {
   // We dispatch requestLogin to kickoff the call to the API
   dispatch(requestLogin(creds))
+  console.log("creds in loginUSer API :"+ JSON.stringify(creds))
 
   return fetch(baseUrl + 'users/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin':'*',
     },
     body: JSON.stringify(creds)
   })

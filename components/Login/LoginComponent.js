@@ -5,6 +5,8 @@ import { loginUser } from '../../redux/ActionCreators';
 import { connect } from "react-redux";
 import { View } from 'react-native';
 import { ScrollView } from "react-native-gesture-handler";
+import Navigation from '../Navigation'
+
 
 
 const mapStateToProps = state => {
@@ -44,27 +46,18 @@ class Login extends Component {
                 console.log("Step 1: setting state")
                 this.setState({
                     uRole: localStorage.getItem('userRole')
-                });
-                console.log("uRole after step 1: "+ this.state.uRole)
-                console.log("step 2 alerts")
-                alert("uRole = " + localStorage.getItem('userRole'));
-                console.log("step 3 redirecting")
-                if (localStorage.getItem('userRole') == 'admin') {
-                    console.log("ATTENTION mch lezim nfout hon")
-                    this.props.history.push("/dashboard");
-                    return;
-                }
-                else if (localStorage.getItem('userRole') == 'nurse') {
-                    console.log("step 4 we entered the correct if")
-                    this.props.history.push("/nursemenu");
-                    return;
-                }
-                else
-                    return
+                })
+
+                    if(this.state.uRole==="nurse"){
+                        this.props.navigation.navigate("NurseMenu")
+                    }
+                    if(this.state.uRole==="admin"){
+                        this.props.navigation.navigate("Dashboard")
+                    }
+       
+        //event.preventDefault();
+            
             })
-        event.preventDefault();
-
-
     }
 
 
@@ -72,6 +65,7 @@ class Login extends Component {
     render() {
         return (
             <ScrollView>
+                          
                     <View>
                         <Avatar src="" style={{ marginLeft: 200, marginBottom: 40 }} />
                         <Input

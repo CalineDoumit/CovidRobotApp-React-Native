@@ -18,7 +18,9 @@ class NurseMenu extends Component {
     }
 
     static navigationOptions = {
-        title: 'Menu'
+        title: 'Menu',
+        headerLeft:null,
+
     };
 
     RenderNurseMenuItem = (props) => {
