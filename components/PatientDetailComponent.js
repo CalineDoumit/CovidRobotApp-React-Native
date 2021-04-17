@@ -8,6 +8,7 @@ import { fetchCorrespondingPatient } from '../redux/ActionCreators';
 import { View } from 'react-native';
 
 
+
 const mapStateToProps = state => {
     return {
         robots: state.robots,
