@@ -12,13 +12,11 @@ import { fetchRobots,fetchPatients } from '../redux/ActionCreators';
 const mapStateToProps = state => {
   return {
     robots:state.robots,
-    patients:state.patients
   }
 }
 
 const mapDispatchToProps = dispatch => ({
   fetchRobots: () => { dispatch(fetchRobots()) },
-  fetchPatients: () => { dispatch(fetchPatients()) },
 
 })
 
@@ -48,7 +46,6 @@ const mapDispatchToProps = dispatch => ({
 class Main extends Component {
   componentDidMount() {
     this.props.fetchRobots();
-    this.props.fetchPatients();
 
   }
 

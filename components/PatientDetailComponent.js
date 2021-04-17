@@ -1,17 +1,23 @@
 import {
-    Card, CardImg, CardText, CardBody,
-    CardTitle, Breadcrumb, BreadcrumbItem, Button,Text
+    Card, CardImg, CardBody,
+    CardTitle, Text
 } from 'react-native-elements';
-import React,{ Component } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { fetchCorrespondingPatient } from '../redux/ActionCreators';
+import { View } from 'react-native';
 
 
 const mapStateToProps = state => {
     return {
         robots: state.robots,
-        //patients:state.patients
+        patients: state.patients
     }
 }
+
+const mapDispatchToProps = dispatch => ({
+    fetchCorrespondingPatient: (robotId) => dispatch(fetchCorrespondingPatient(robotId)),
+})
 
 function RenderRobot({ robot }) {
     return (
@@ -26,6 +32,11 @@ function RenderRobot({ robot }) {
 }
 
 class PatientDetail extends Component {
+
+    componentDidMount() {
+        this.props.fetchCorrespondingPatient(this.props.navigation.getParam('robotId',''));
+    
+      }
     constructor(props) {
         super(props);
         this.RobotGo = this.RobotGo.bind(this);
@@ -56,12 +67,21 @@ class PatientDetail extends Component {
         alert("patient id: " + robotId)
     }
 
-    render(){
-       // const dishId = this.props.navigation.getParam('patientId','');
-        return(<Text>TEST </Text>);
-        
+    render() {
+        const robotId = this.props.navigation.getParam('robotId','');
+        return (
+            <View>
+                <Text>TEST </Text>
+                <Text>patient : {this.props.patients.correspondingPatient.description} </Text>
+                <Text>robot : {robotId} </Text>
+                <Text>hello</Text>
+            </View>
+
+
+        );
+
     }
 
 }
 //export default connect(mapStateToProps)(Home);
-export default connect(mapStateToProps)(PatientDetail);
+export default connect(mapStateToProps, mapDispatchToProps)(PatientDetail);
