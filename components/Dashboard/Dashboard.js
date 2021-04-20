@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import {Text} from 'react-native';
+import {Text,View} from 'react-native';
+import {Button} from 'react-native-elements';
+import DashNavbar from './DashNavbar';
+
 
 class Dashboard extends Component{
     constructor(props){
@@ -7,14 +10,16 @@ class Dashboard extends Component{
     }
 
     static navigationOptions = {
-        title: 'Dashboard',
-        headerLeft:null,
+        header:null,
 
     };
 
     render(){
         return(
-            <Text>TEST </Text>
+            <View>
+                <DashNavbar/>
+            </View>
+           
         )
     }
 }
