@@ -3,12 +3,18 @@ import { View, FlatList, ScrollView, Text,TouchableOpacity } from 'react-native'
 import { Card } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { Loading } from './LoadingComponent';
+import {fetchRobots} from '../redux/ActionCreators'
 
 const mapStateToProps = state => {
     return {
         robots: state.robots
     }
 }
+
+const mapDispatchToProps = dispatch => ({
+    fetchRobots: () => dispatch(fetchRobots()),
+})
+
 
 
 
@@ -73,4 +79,4 @@ class NurseMenu extends Component {
 
 }
 
-export default connect(mapStateToProps)(NurseMenu);
+export default connect(mapStateToProps,mapDispatchToProps)(NurseMenu);

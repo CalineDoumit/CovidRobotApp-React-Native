@@ -110,9 +110,9 @@ export const loginUser = (creds) => (dispatch) => {
     .then(response => {
       if (response.success) {
         // If login was successful, set the token in local storage
-        localStorage.setItem('token', response.token);
-        localStorage.setItem('creds', JSON.stringify(creds));
-        localStorage.setItem('userRole', response.userRole);
+        //localStorage.setItem('token', response.token);
+        //localStorage.setItem('creds', JSON.stringify(creds));
+        //localStorage.setItem('userRole', response.userRole);
         // Dispatch the success action
         dispatch(receiveLogin(response));
         console.log("----------------------------");
@@ -432,9 +432,9 @@ export const receiveLogout = () => {
 // Logs the user out
 export const logoutUser = () => (dispatch) => {
   dispatch(requestLogout())
-  localStorage.removeItem('token');
-  localStorage.removeItem('creds');
-  localStorage.removeItem('userRole');
+  //localStorage.removeItem('token');
+  //localStorage.removeItem('creds');
+  //localStorage.removeItem('userRole');
   dispatch(receiveLogout())
 }
 

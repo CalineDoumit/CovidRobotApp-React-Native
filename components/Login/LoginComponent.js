@@ -22,10 +22,10 @@ const mapStateToProps = state => {
     }
 }*/
 
-/*const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = dispatch => ({
     loginUser: (creds) => dispatch(loginUser(creds)),
 
-})*/
+})
 
 
 
@@ -40,7 +40,7 @@ class Login extends Component {
             remember: false
         };
 
-        //this.handleLogin = this.handleLogin.bind(this);
+        this.handleLogin = this.handleLogin.bind(this);
     };
     componentDidMount() {
         SecureStore.getItemAsync('userinfo')
@@ -137,7 +137,7 @@ class Login extends Component {
 }
 
 //export default connect(mapStateToProps, mapDispatchToProps)(Login);
-export default Login;
+export default connect(mapDispatchToProps)(Login);
 
 
 const styles = StyleSheet.create({

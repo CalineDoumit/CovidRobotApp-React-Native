@@ -7,18 +7,24 @@ import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 
 const myStackNavigator = createStackNavigator({
+    NurseMenu:{
+        screen:NurseMenuScreen
+    }, 
     Login:{
         screen:LoginScreen
     },
-    NurseMenu:{
-        screen:NurseMenuScreen
+
+    Dashboard:{
+        screen:DashboardScreen
     },
+
+
+
+   
     PatientDetail:{
         screen:PatientDetailScreen
     },
-    Dashboard:{
-        screen:DashboardScreen
-    }
+
 })
 
 const appContainer = createAppContainer(myStackNavigator);
