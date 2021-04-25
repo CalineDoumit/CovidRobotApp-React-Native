@@ -3,7 +3,7 @@ import { Avatar, Button, Input, CheckBox } from 'react-native-elements';
 import { Auth } from "../../redux/auth";
 import { loginUser } from '../../redux/ActionCreators';
 import { connect } from "react-redux";
-import { View,StyleSheet } from 'react-native';
+import { View,StyleSheet,TextInput } from 'react-native';
 import { ScrollView } from "react-native-gesture-handler";
 import Navigation from '../Navigation'
 // https://docs.expo.io/versions/latest/sdk/securestore/
@@ -15,12 +15,11 @@ import * as ImagePicker from 'expo-image-picker';
 
 
 
-/*
 const mapStateToProps = state => {
     return {
         auth: state.auth,
     }
-}*/
+}
 
 const mapDispatchToProps = dispatch => ({
     loginUser: (creds) => dispatch(loginUser(creds)),
@@ -37,59 +36,37 @@ class Login extends Component {
             uRole: '',
             username: '',
             password: '',
-            remember: false
         };
 
         this.handleLogin = this.handleLogin.bind(this);
     };
     componentDidMount() {
-        SecureStore.getItemAsync('userinfo')
-            .then((userdata) => {
-                let userinfo = JSON.parse(userdata);
-                if (userinfo) {
-                    this.setState({ username: userinfo.username });
-                    this.setState({ password: userinfo.password });
-                    this.setState({ uRole: userinfo.uRole });
-                    this.setState({ remember: true })
-                }
-            })
+        
     }
 
-
-    handleLogin() {
-        console.log("fetna bl login")
-
-        if (this.state.remember)
-            SecureStore.setItemAsync('userinfo', JSON.stringify({ username: this.state.username, password: this.state.password ,uRole:this.state.uRole}))
+    handleLogin=()=> {
+        this.props.loginUser({ username: this.state.username, password: this.state.password })
             .then(()=>{
-                this.props.loginUser({ username: this.state.username, password: this.state.password })
-                if (this.state.uRole === "nurse") {
+               SecureStore.getItemAsync('userRole')
+               .then((RoleUser)=>{
+                   this.setState({uRole:RoleUser})
+                   console.log("MY USER ROLE: "+ this.state.uRole)
+                   if(this.state.uRole==='nurse'){
                     this.props.navigation.navigate("NurseMenu")
-                }
-                if (this.state.uRole === "admin") {
-                    this.props.navigation.navigate("Dashboard")
-                }
-
+                   }
+                   else if (this.state.uRole==='admin'){
+                        console.log("I am a admin")
+                        this.props.navigation.navigate("Dashboard")
+                   }
+                   else {
+                        console.log("I am a patient")
+                        this.props.navigation.navigate("PatientMenu")
+                   }
+               })
+               .catch((error) => console.log('ERROR', error));
+               
             })
-                .catch((error) => console.log('Could not save user info', error));
-        else
-            SecureStore.deleteItemAsync('userinfo')
-            .then(()=>{
-                this.props.loginUser({ username: this.state.username, password: this.state.password })
-                if (this.state.uRole === "nurse") {
-                    this.props.navigation.navigate("NurseMenu")
-                }
-                if (this.state.uRole === "admin") {
-                    this.props.navigation.navigate("Dashboard")
-                }
 
-            })
-                .catch((error) => console.log('Could not delete user info', error));
-
-                         
-                //event.preventDefault();
-
-        
     }
 
 
@@ -100,34 +77,26 @@ class Login extends Component {
 
                 <View>
                     <Avatar src="" style={{ marginLeft: 200, marginBottom: 40 }} />
-                    <Input
+                    <TextInput
                     placeholder="Username"
                     leftIcon={{ type: 'font-awesome', name: 'user-o' }}
-                    onChangeText={(username) => this.setState({username})}
-                    value={this.state.username}
-                    containerStyle={styles.formInput}
+                    onChangeText={(user) => this.setState({username:user})}
                     />
-                <Input
+
+                <TextInput
                     placeholder="Password"
                     secureTextEntry={true}
                     leftIcon={{ type: 'font-awesome', name: 'key' }}
-                    onChangeText={(password) => this.setState({password})}
-                    value={this.state.password}
-                    containerStyle={styles.formInput}
+                    onChangeText={(password) => this.setState({password:password})}
                     />
-                <CheckBox title="Remember Me"
-                    center
-                    checked={this.state.remember}
-                    onPress={() => this.setState({remember: !this.state.remember})}
-                    containerStyle={styles.formCheckbox}
-                    />
+                
                 </View>
 
                 <View>
-                    <Button title="LOGIN" onPress={() => {
-                        console.log("fetna bl onPress")
-                        this.handleLogin()
-                    }} />
+                    <Button title="LOGIN" onPress={
+                        //console.log("fetna bl onPress")
+                        this.handleLogin
+                    } />
                 </View>
 
 
@@ -137,7 +106,7 @@ class Login extends Component {
 }
 
 //export default connect(mapStateToProps, mapDispatchToProps)(Login);
-export default connect(mapDispatchToProps)(Login);
+export default connect(mapStateToProps,mapDispatchToProps)(Login);
 
 
 const styles = StyleSheet.create({

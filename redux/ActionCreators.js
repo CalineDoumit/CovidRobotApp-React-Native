@@ -1,5 +1,6 @@
 import * as ActionTypes from './ActionTypes';
 import { baseUrl } from '../shared/baseUrl';
+import * as SecureStore from 'expo-secure-store';
 
 
 export const fetchRobots = () => (dispatch) => {
@@ -109,11 +110,28 @@ export const loginUser = (creds) => (dispatch) => {
     .then(response => response.json())
     .then(response => {
       if (response.success) {
+        console.log("responseToken: "+response.token )
         // If login was successful, set the token in local storage
         //localStorage.setItem('token', response.token);
         //localStorage.setItem('creds', JSON.stringify(creds));
         //localStorage.setItem('userRole', response.userRole);
         // Dispatch the success action
+        SecureStore.setItemAsync('token',response.token)
+        .then((userToken)=>{
+          //console.log("token : "+userToken)
+          SecureStore.getItemAsync('token')
+          .then((userT)=>{
+            console.log("userT: "+userT)
+          })
+        .catch((error) => console.log('Could not save user token', error));
+          
+        })
+        .catch((error) => console.log('Could not save user token', error));
+        SecureStore.setItemAsync('creds',JSON.stringify(creds))
+        .catch((error) => console.log('Could not save user creds', error));
+        SecureStore.setItemAsync('userRole',response.userRole)
+        .catch((error) => console.log('Could not save user role', error));
+        
         dispatch(receiveLogin(response));
         console.log("----------------------------");
         console.log("Login Successful");

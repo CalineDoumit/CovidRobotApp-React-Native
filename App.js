@@ -2,23 +2,24 @@ import React from 'react';
 import Main from './components/MainComponent';
 import { Provider } from 'react-redux';
 import { ConfigureStore } from './redux/configureStore';
-//import { PersistGate } from 'redux-persist/es/integration/react'
+import { PersistGate } from 'redux-persist/es/integration/react'
 import { Loading } from './components/LoadingComponent';
 
-//const { persistor, store } = ConfigureStore();
-const store = ConfigureStore();
+//const store = ConfigureStore();
+const { persistor, store } = ConfigureStore();
+
 
 
 export default class App extends React.Component {
   render() {
-    return (
+    /*return (
       <Provider store={store}>
         <Main />
       </Provider>
-    );
+    );*/
 
 
-    /*return (
+    return (
       <Provider store={store}>
          <PersistGate 
           loading={<Loading />}
@@ -26,6 +27,6 @@ export default class App extends React.Component {
           <Main />
         </PersistGate>
       </Provider>
-    );*/
+    );
   }
 }

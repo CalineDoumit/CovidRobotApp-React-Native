@@ -46,14 +46,14 @@ class Dashboard extends Component {
     };
     deactivatePatient(data) {
         console.log("patient ID: " + data.patient)
-        //this.props.postDeactivatePatient(data.patient);
+        this.props.postDeactivatePatient(data.patient);
     }
 
     element = (data) => (
         data.role === 'patient' ?
             data.isActive == true ?
-                <TouchableOpacity onPress={() => console.log("button")
-                //this.deactivatePatient(data)
+                <TouchableOpacity onPress={() => //console.log("button")
+                this.deactivatePatient(data)
             }>
                     <View style={{ width: 80, height: 18, backgroundColor: '#78B7BB', borderRadius: 2 }}>
                         <Text style={{ textAlign: 'center', color: '#fff', fontSize: 12 }}>DEACTIVATE</Text>
