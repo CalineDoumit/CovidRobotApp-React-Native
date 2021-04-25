@@ -4,8 +4,8 @@ import {
 } from 'react-native-elements';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchCorrespondingPatient } from '../redux/ActionCreators';
-import { View } from 'react-native';
+import { fetchCorrespondingPatient ,fetchRobotGo,fetchRobotCome,fetchRobotStop} from '../redux/ActionCreators';
+import { View ,TouchableOpacity} from 'react-native';
 
 
 
@@ -18,6 +18,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
     fetchCorrespondingPatient: (robotId) => dispatch(fetchCorrespondingPatient(robotId)),
+    fetchRobotGo: (robotId) => { dispatch(fetchRobotGo(robotId)) },
+    fetchRobotCome: (robotId) => { dispatch(fetchRobotCome(robotId)) },
+    fetchRobotStop: (robotId) => { dispatch(fetchRobotStop(robotId)) }
 })
 
 function RenderRobot({ robot }) {
@@ -32,14 +35,19 @@ function RenderRobot({ robot }) {
     )
 }
 
+
+
 class PatientDetail extends Component {
 
     componentDidMount() {
-        this.props.fetchCorrespondingPatient(this.props.navigation.getParam('robotId',''));
-    
-      }
+        this.props.fetchCorrespondingPatient(this.props.navigation.getParam('robotId', ''));
+
+    }
     constructor(props) {
         super(props);
+        this.state={
+            myrobot:this.props.robots.robots.filter((robot) => robot._id === this.props.navigation.getParam('robotId', ''))[0]
+        }
         this.RobotGo = this.RobotGo.bind(this);
         this.RobotCome = this.RobotCome.bind(this);
         this.RobotStop = this.RobotStop.bind(this);
@@ -69,13 +77,35 @@ class PatientDetail extends Component {
     }
 
     render() {
-        const robotId = this.props.navigation.getParam('robotId','');
+        const robotId = this.props.navigation.getParam('robotId', '');
+        
+        alert("robot fom state : "+JSON.stringify(this.state.myrobot ))
         return (
             <View>
                 <Text>TEST </Text>
                 <Text>patient : {this.props.patients.correspondingPatient.description} </Text>
                 <Text>robot : {robotId} </Text>
                 <Text>hello</Text>
+
+                <TouchableOpacity style={{ margin: 5, borderRadius: 40, backgroundColor: '#4ea8cb', }}
+                    onPress={
+                       ()=> this.RobotGo(this.state.myrobot.number)
+                    } >
+                    <Text>GO</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{ margin: 5, borderRadius: 40, backgroundColor: '#4ea8cb', }}
+                    onPress={() => {
+                        this.RobotStop(this.state.myrobot.number);
+                    }} >
+                    <Text>STOP</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={{ margin: 5, borderRadius: 40, backgroundColor: '#4ea8cb', }}
+                    onPress={() => {
+                        this.RobotCome(this.state.myrobot.number);
+                    }} >
+                    <Text>COME</Text>
+                </TouchableOpacity>
             </View>
 
 
