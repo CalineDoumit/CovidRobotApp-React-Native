@@ -7,6 +7,9 @@ import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 
 const myStackNavigator = createStackNavigator({
+    Dashboard:{
+        screen:DashboardScreen
+    },
     NurseMenu:{
         screen:NurseMenuScreen
     }, 
@@ -14,9 +17,7 @@ const myStackNavigator = createStackNavigator({
         screen:LoginScreen
     },
 
-    Dashboard:{
-        screen:DashboardScreen
-    },
+
 
 
 
