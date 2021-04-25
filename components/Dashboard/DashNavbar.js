@@ -168,9 +168,9 @@ class DashNavbar extends Component {
 
   render() {
     return (
-      <View>
+      <View style={{borderWidth:4, height:'15%'}}>
 
-        <View style={{ backgroundColor: 'blue', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', height: '50%' }}>
+        <View style={{backgroundColor: 'blue', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' , flex:1}}>
           <TouchableOpacity style={{ margin: 5, borderRadius: 40, backgroundColor: '#4ea8cb', }}
             onPress={() => {
               this.togglePatientModal();
