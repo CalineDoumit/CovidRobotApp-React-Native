@@ -1,12 +1,15 @@
 import React, { Component } from "react";
-import { Text, View, Button, TextInput, TouchableOpacity, Modal,ScrollView } from 'react-native';
+import { Text, View, Button, TextInput, TouchableOpacity, Modal, ScrollView } from 'react-native';
 import { Icon } from 'react-native-elements';
-import { postNurse, postPatient } from '../../redux/ActionCreators'
+import { postNurse, postPatient, fetchUsers, fetchRobots,postAssign } from '../../redux/ActionCreators'
 import { connect } from 'react-redux';
 //import { ScrollView } from "react-native-gesture-handler";
+import DropDownPicker from 'react-native-dropdown-picker'
+
 const mapStateToProps = state => {
   return {
-    users: state.users
+    users: state.users,
+    robots: state.robots
   }
 }
 
@@ -15,6 +18,9 @@ const mapDispatchToProps = (dispatch) => ({
   postNurse: (values) => dispatch(postNurse(values)),
   postPatient: (values) => dispatch(postPatient(values)),
   postAssign: (values) => dispatch(postAssign(values)),
+  fetchUsers: () => dispatch(fetchUsers()),
+  fetchRobots: () => dispatch(fetchRobots()),
+
 
 })
 
@@ -36,10 +42,10 @@ class DashNavbar extends Component {
       showPatientModal: false,
       showNurseModal: false,
       showAssignModal: false,
-      listOfInactivePatients:[],
-      listOfInactiveRooms:[],
-      chosenRobotid:0,
-      chosenPatientid:0,
+      listOfInactivePatients: [],
+      listOfInactiveRooms: [],
+      chosenRobotid: 0,
+      chosenPatientid: 0,
 
 
     };
@@ -50,11 +56,37 @@ class DashNavbar extends Component {
     this.resetPatientForm = this.resetPatientForm.bind(this);
     this.handlePatientSubmit = this.handlePatientSubmit.bind(this);
     this.handleNurseSubmit = this.handleNurseSubmit.bind(this);
-    //this.handleAssignSubmit = this.handleAssignSubmit.bind(this);
-    this.activatePatientRobot=this.activatePatientRobot.bind(this);
-
-
+    this.handleAssignSubmit = this.handleAssignSubmit.bind(this);
+    //this.activatePatientRobot = this.activatePatientRobot.bind(this);
+    this.makeListPatients = this.makeListPatients.bind(this);
+    this.makeListRooms = this.makeListRooms.bind(this);
   };
+
+  componentDidMount() {
+    this.props.fetchUsers();
+    this.props.fetchRobots();
+
+  }
+
+  makeListPatients() {
+    this.state.listOfInactivePatients.length = 0
+    this.props.users.users.map((user, index) => {
+
+      if (user.isActive == false) {
+        console.log("user: " + JSON.stringify(user))
+        this.state.listOfInactivePatients.push({ label: user.firstname, value: user.patient, icon: () => <Icon name="flag" size={18} color="#900" /> })
+      }
+    })
+  }
+
+  makeListRooms() {
+    this.state.listOfInactiveRooms.length = 0
+    this.props.robots.robots.map((robot) => {
+      if (robot.isOccupied == false) {
+        this.state.listOfInactiveRooms.push({ label: robot.roomNumber, value: robot.number })
+      }
+    })
+  }
 
 
   toggleNurseModal = () => {
@@ -71,24 +103,6 @@ class DashNavbar extends Component {
     })
   }
 
-  makeListPatients(){
-    this.props.users.users.map((user,index)=>{
-      if(user.isActive==false){
-        this.state.listOfInactiveRooms.length=0
-        this.state.listOfInactivePatients.push({label:user.firstname,value:user.patient})
-      }
-    })
-  }
-
-  makeListRooms(){
-    alert("all the robots : "+ JSON.stringify(this.props.robots.robots))
-    this.props.robots.robots.map((robot)=>{
-      if(robot.isOccupied==false){
-        this.state.listOfInactiveRooms.length=0
-        this.state.listOfInactiveRooms.push({label:robot.roomNumber,value:robot.number})
-      }
-    })
-  }
 
   toggleAssignModal = () => {
     console.log("toggleModal patient")
@@ -131,18 +145,19 @@ class DashNavbar extends Component {
     console.log("button pressed")
   }
 
-  activatePatientRobot(patientId,robotNumber){
-    alert("patient ID: "+patientId)
-    alert("robot number "+robotNumber)
-    this.props.postAssign({patientId:patientId,robotnumber:robotNumber});
-}
+  activatePatientRobot(patientId, robotNumber) {
+    //alert("patient ID: " + patientId)
+    //alert("robot number " + robotNumber)
+    this.props.postAssign({ patientId: patientId, robotnumber: robotNumber });
+  }
 
- /* handleAssign(){
-    console.log("patient id "+ this.state.chosenPatientid)
-    console.log("robot id "+ this.state.chosenRobotid)
-    this.activatePatientRobot(this.state.chosenPatientid,this.state.chosenRobotid)
+  handleAssignSubmit() {
+    console.log("patient id " + this.state.chosenPatientid)
+    console.log("robot id " + this.state.chosenRobotid)
+    this.activatePatientRobot(this.state.chosenPatientid, this.state.chosenRobotid)
+    this.toggleAssignModal()
 
-  }*/
+  }
 
   resetPatientForm = () => {
     this.setState({ username: '', password: '', firstname: '', lastname: '', description: '', phonenumber: '', allergies: '', bloodType: '', dateofBirth: '', emergencyContact: '', })
@@ -170,9 +185,9 @@ class DashNavbar extends Component {
             <Text>Add Nurse</Text>
           </TouchableOpacity>
           <TouchableOpacity style={{ margin: 5, borderWidth: 4 }}
-          onPress={() => {
-            this.toggleAssignModal();
-          }} >
+            onPress={() => {
+              this.toggleAssignModal();
+            }} >
             <Text>Assign Robot</Text>
           </TouchableOpacity>
           <TouchableOpacity style={{ margin: 5, borderWidth: 4 }}
@@ -312,7 +327,7 @@ class DashNavbar extends Component {
                 style={{ margin: 10 }}
               />
 
-              
+
 
               <TouchableOpacity style={{ borderWidth: 4, width: 100, alignSelf: 'center' }} onPress={this.handlePatientSubmit}>
                 <Text>SUBMIT</Text>
@@ -410,8 +425,47 @@ class DashNavbar extends Component {
           </View>
         </Modal>
 
-        
+        <Modal animationType={"slide"} visible={this.state.showAssignModal}
+          onDismiss={this.toggleAssignModal}
+          onRequestClose={() => this.toggleAssignModal()
 
+          }>
+
+          <View>
+            <Text style={{ marginBottom: 30 }}>ASSIGN A PATIENT TO A ROOM</Text>
+            <DropDownPicker
+              placeholder='Select a patient'
+              items={this.state.listOfInactivePatients}
+              //defaultValue={this.state.country}
+              containerStyle={{ height: 40 }}
+              style={{ backgroundColor: '#fafafa' }}
+              itemStyle={{
+                justifyContent: 'flex-start'
+              }}
+              dropDownStyle={{ backgroundColor: '#fafafa' }}
+              onChangeItem={item => this.setState({chosenPatientid : item.value})}
+            />
+
+            <DropDownPicker
+              placeholder='Select a Room'
+              items={this.state.listOfInactiveRooms}
+              //defaultValue={this.state.country}
+              containerStyle={{ height: 40 }}
+              style={{ backgroundColor: '#fafafa' }}
+              itemStyle={{
+                justifyContent: 'flex-start'
+              }}
+              dropDownStyle={{ backgroundColor: '#fafafa' }}
+              onChangeItem={item =>this.setState({chosenRobotid : item.value})}
+            />
+            <TouchableOpacity style={{ margin: 10, borderRadius: 40, backgroundColor: '#4ea8cb', }}
+            onPress={this.handleAssignSubmit} >
+              <Text>Submit</Text>
+            </TouchableOpacity>
+
+          </View>
+
+        </Modal>
 
       </View>
     )

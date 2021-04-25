@@ -469,3 +469,33 @@ export const addCorrespondingPatient = (patient) => {
     payload:patient
   }
 }
+
+
+export const postAssign = (values) => (dispatch) => {
+  alert(" in action Creator"+JSON.stringify(values))
+  return fetch(baseUrl + 'users/AssignRobot' , {
+    method: "POST",
+    body: JSON.stringify(values),
+    headers: {
+      'Content-Type':'application/json'
+    },
+    credentials: "same-origin"
+  })
+    .then(response => {
+      if (response.ok) {
+        return response;
+      } else {
+        var error = new Error('Error ' + response.status + ': ' + response.statusText);
+        error.response = response;
+        alert("error1")
+        throw error;
+      }
+    },
+      error => {
+        alert("error2")
+        throw error;
+      })
+    .then(response => {response.json(); alert("response: "+ response.json())})
+    .then(() => { console.log("Activated"); })
+    .catch(error => {console.log("Activated Error"+ error.message)})
+}
