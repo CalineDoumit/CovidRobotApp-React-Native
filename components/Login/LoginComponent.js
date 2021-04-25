@@ -60,7 +60,7 @@ class Login extends Component {
                    }
                    else {
                         console.log("I am a patient")
-                        this.props.navigation.navigate("PatientMenu")
+                        this.props.navigation.navigate("PatientMenu",{username:this.state.username})
                    }
                })
                .catch((error) => console.log('ERROR', error));
