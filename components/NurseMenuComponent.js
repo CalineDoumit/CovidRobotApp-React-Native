@@ -74,16 +74,8 @@ class NurseMenu extends Component {
         }
         else {
             return (
-                <View>
-                    <TouchableOpacity style={{ margin: 5, borderRadius: 40, backgroundColor: '#4ea8cb', }}
-
-                        onPress={() => {
-                            this.handleLogout();
-                        }} >
-
-                        <Text>LOGOUT</Text>
-
-                    </TouchableOpacity>
+                <View style={{flex:1}}>
+                    
                     <ScrollView>
                         <FlatList
                             data={this.props.robots.robots}
@@ -91,6 +83,15 @@ class NurseMenu extends Component {
                             keyExtractor={item => item._id.toString()}
                         />
                     </ScrollView>
+                    <TouchableOpacity style={{ margin: 5, backgroundColor:'#0099CC',borderRadius:30, width:150,height:50 ,alignItems:'center',justifyContent:'center',marginLeft:125}}
+
+                        onPress={() => {
+                            this.handleLogout();
+                        }} >
+
+                        <Text style={{color:'white',fontSize:20,alignSelf:'center'}} >LOGOUT</Text>
+
+                    </TouchableOpacity>
 
                 </View>
             );
