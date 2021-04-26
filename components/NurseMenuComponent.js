@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { View, FlatList, ScrollView, Text,TouchableOpacity } from 'react-native';
+import { View, FlatList, ScrollView, Text, TouchableOpacity } from 'react-native';
 import { Card } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { Loading } from './LoadingComponent';
-import {fetchRobots} from '../redux/ActionCreators'
+import { fetchRobots,logoutUser } from '../redux/ActionCreators'
+
 
 const mapStateToProps = state => {
     return {
@@ -13,29 +14,32 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
     fetchRobots: () => dispatch(fetchRobots()),
+    logoutUser: () => dispatch(logoutUser()),
+
 })
 
 
 
 
 class NurseMenu extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
+        this.handleLogout = this.handleLogout.bind(this);
     }
 
     static navigationOptions = {
         title: 'Menu',
-        headerLeft:null,
+        headerLeft: null,
 
     };
 
     RenderNurseMenuItem = (props) => {
         const item = props.item;
         const { navigate } = this.props.navigation;
-    
+
         return (
             <View >
-                <TouchableOpacity onPress = {()=> navigate('PatientDetail', { robotId: item._id })}
+                <TouchableOpacity onPress={() => navigate('PatientDetail', { robotId: item._id })}
                 >
                     <Card>
                         <Card.Title style={{ fontSize: 20 }}> Room {item.roomNumber}</Card.Title>
@@ -48,6 +52,10 @@ class NurseMenu extends Component {
         );
     }
 
+    handleLogout=()=>{
+        this.props.logoutUser();
+        this.props.navigation.navigate('Login')
+    }
 
     render() {
 
@@ -66,17 +74,29 @@ class NurseMenu extends Component {
         }
         else {
             return (
-                <ScrollView>
-                    <FlatList
-                        data={this.props.robots.robots}
-                        renderItem={this.RenderNurseMenuItem}
-                        keyExtractor={item => item._id.toString()}
-                    />
-                </ScrollView>
+                <View>
+                    <TouchableOpacity style={{ margin: 5, borderRadius: 40, backgroundColor: '#4ea8cb', }}
+
+                        onPress={() => {
+                            this.handleLogout();
+                        }} >
+
+                        <Text>LOGOUT</Text>
+
+                    </TouchableOpacity>
+                    <ScrollView>
+                        <FlatList
+                            data={this.props.robots.robots}
+                            renderItem={this.RenderNurseMenuItem}
+                            keyExtractor={item => item._id.toString()}
+                        />
+                    </ScrollView>
+
+                </View>
             );
         }
     }
 
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(NurseMenu);
+export default connect(mapStateToProps, mapDispatchToProps)(NurseMenu);

@@ -4,7 +4,7 @@ import {
 } from 'react-native-elements';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchCorrespondingPatient ,fetchRobotGo,fetchRobotCome,fetchRobotStop} from '../redux/ActionCreators';
+import { fetchCorrespondingPatient,fetchCorrespondingUser ,fetchRobotGo,fetchRobotCome,fetchRobotStop} from '../redux/ActionCreators';
 import { View ,TouchableOpacity} from 'react-native';
 
 
@@ -12,35 +12,27 @@ import { View ,TouchableOpacity} from 'react-native';
 const mapStateToProps = state => {
     return {
         robots: state.robots,
-        patients: state.patients
+        patients: state.patients,
+        users:state.user,
     }
 }
 
 const mapDispatchToProps = dispatch => ({
     fetchCorrespondingPatient: (robotId) => dispatch(fetchCorrespondingPatient(robotId)),
+    fetchCorrespondingUser: (robotId) => dispatch(fetchCorrespondingUser(robotId)),
     fetchRobotGo: (robotId) => { dispatch(fetchRobotGo(robotId)) },
     fetchRobotCome: (robotId) => { dispatch(fetchRobotCome(robotId)) },
     fetchRobotStop: (robotId) => { dispatch(fetchRobotStop(robotId)) }
 })
-
-function RenderRobot({ robot }) {
-    return (
-        <Card>
-            <CardImg top src='' alt={robot.roomNumber} />
-            <CardBody>
-                <CardTitle>{robot.name}</CardTitle>
-                {/*<CardText>{robot.description}</CardText>*/}
-            </CardBody>
-        </Card>
-    )
-}
-
 
 
 class PatientDetail extends Component {
 
     componentDidMount() {
         this.props.fetchCorrespondingPatient(this.props.navigation.getParam('robotId', ''));
+        this.props.fetchCorrespondingUser(this.props.navigation.getParam('robotId', ''));
+        //console.log("firstname in didMount",this.props.users.correspondingUser)
+
 
     }
     constructor(props) {
@@ -78,12 +70,11 @@ class PatientDetail extends Component {
 
     render() {
         const robotId = this.props.navigation.getParam('robotId', '');
-        
-        alert("robot fom state : "+JSON.stringify(this.state.myrobot ))
         return (
             <View>
                 <Text>TEST </Text>
                 <Text>patient : {this.props.patients.correspondingPatient.description} </Text>
+                
                 <Text>robot : {robotId} </Text>
                 <Text>hello</Text>
 

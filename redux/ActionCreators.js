@@ -263,7 +263,6 @@ export const fetchUser = (userId) => (dispatch) => {
 
 
 export const fetchRobotGo = (robotId) => (dispatch) => {
-  alert("fetna bel fetch")
   return fetch(baseUrl + 'robots/' + robotId+ '/RobotGo')
 
   .then(response => {
@@ -285,7 +284,6 @@ export const fetchRobotGo = (robotId) => (dispatch) => {
 }
 
 export const fetchRobotCome = (robotId) => (dispatch) => {
-  alert("fetna bel fetch")
   return fetch(baseUrl + 'robots/' + robotId+ '/RobotCome')
 
   .then(response => {
@@ -307,7 +305,6 @@ export const fetchRobotCome = (robotId) => (dispatch) => {
 }
 
 export const fetchRobotStop = (robotId) => (dispatch) => {
-  alert("fetna bel fetch")
   return fetch(baseUrl + 'robots/' + robotId+ '/RobotStop')
 
   .then(response => {
@@ -329,7 +326,6 @@ export const fetchRobotStop = (robotId) => (dispatch) => {
 }
 
 export const postPatient = (values) => (dispatch) => {
-  alert("values:",values)
   return fetch(baseUrl + 'users/createPatient', {
       method: "POST",
       body: JSON.stringify(values),
@@ -356,7 +352,6 @@ export const postPatient = (values) => (dispatch) => {
 };
 
 export const postNurse = (values) => (dispatch) => {
-  alert("values:",values)
   return fetch(baseUrl + 'users/createNurse', {
       method: "POST",
       body: JSON.stringify(values),
@@ -449,10 +444,11 @@ export const receiveLogout = () => {
 
 // Logs the user out
 export const logoutUser = () => (dispatch) => {
+  console.log("logged out")
   dispatch(requestLogout())
-  //localStorage.removeItem('token');
-  //localStorage.removeItem('creds');
-  //localStorage.removeItem('userRole');
+  SecureStore.deleteItemAsync('token')
+  SecureStore.deleteItemAsync('creds')
+  SecureStore.deleteItemAsync('userRole')
   dispatch(receiveLogout())
 }
 
@@ -489,8 +485,42 @@ export const addCorrespondingPatient = (patient) => {
 }
 
 
+export const fetchCorrespondingUser = (robotId) => (dispatch) => {
+  //dispatch(patientsLoading());
+  alert("robotID: "+ robotId)
+  alert("fetna bl fetch")
+  return fetch(baseUrl +'robots/'+robotId+ '/getCorrespondingUser')
+    .then(response => {
+      if (response.ok) {
+        console.log("response from server: " + JSON.stringify(response))
+        return response;
+      } else {
+        var error = new Error('Error ' + response.status + ': ' + response.statusText);
+        error.response = response;
+        throw error;
+      }
+    },
+      error => {
+        var errmess = new Error(error.message);
+        console.log("erreur 2: errmess");
+
+        throw errmess;
+      })
+    .then(response => response.json())
+    .then(patient => dispatch(addCorrespondingUser(patient)))
+    .catch(error => dispatch(usersFailed(error.message)));
+}
+
+export const addCorrespondingUser = (user) => {
+  return {
+    type: ActionTypes.ADD_CORRESPONDINGUSER,
+    payload:user
+  }
+}
+
+
+
 export const postAssign = (values) => (dispatch) => {
-  alert(" in action Creator"+JSON.stringify(values))
   return fetch(baseUrl + 'users/AssignRobot' , {
     method: "POST",
     body: JSON.stringify(values),
@@ -505,15 +535,13 @@ export const postAssign = (values) => (dispatch) => {
       } else {
         var error = new Error('Error ' + response.status + ': ' + response.statusText);
         error.response = response;
-        alert("error1")
         throw error;
       }
     },
       error => {
-        alert("error2")
         throw error;
       })
-    .then(response => {response.json(); alert("response: "+ response.json())})
+    .then(response => {response.json()})
     .then(() => { console.log("Activated"); })
     .catch(error => {console.log("Activated Error"+ error.message)})
 }
