@@ -17,7 +17,7 @@ export const Patients = (state = {
             return { ...state, isLoading: false, errMess: action.payload, patients: [], correspondingPatient: [] };
 
         case ActionTypes.ADD_CORRESPONDINGPATIENT:
-            alert(JSON.stringify(action.payload));
+            //alert(JSON.stringify(action.payload));
             return { ...state, isLoading: false, errMess: null, patients: [], correspondingPatient: action.payload };
 
         default:

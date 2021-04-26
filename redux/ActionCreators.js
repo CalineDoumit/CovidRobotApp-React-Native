@@ -487,8 +487,8 @@ export const addCorrespondingPatient = (patient) => {
 
 export const fetchCorrespondingUser = (robotId) => (dispatch) => {
   //dispatch(patientsLoading());
-  alert("robotID: "+ robotId)
-  alert("fetna bl fetch")
+  //alert("robotID: "+ robotId)
+  //alert("fetna bl fetch")
   return fetch(baseUrl +'robots/'+robotId+ '/getCorrespondingUser')
     .then(response => {
       if (response.ok) {
