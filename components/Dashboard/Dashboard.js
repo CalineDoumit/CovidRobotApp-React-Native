@@ -29,6 +29,7 @@ class Dashboard extends Component {
         this.state = {
             tableData: [],
             tableHead: ['role', 'firstname', 'lastname', 'phone Number', 'Action'],
+            //stateChanged:0,
         }
         this.deactivatePatient = this.deactivatePatient.bind(this);
     }
@@ -47,14 +48,15 @@ class Dashboard extends Component {
     deactivatePatient(data) {
         console.log("patient ID: " + data.patient)
         this.props.postDeactivatePatient(data.patient);
+        this.props.fetchUsers();
     }
 
     element = (data) => (
         data.role === 'patient' ?
             data.isActive == true ?
                 <TouchableOpacity onPress={() => //console.log("button")
-                this.deactivatePatient(data)
-            }>
+                    this.deactivatePatient(data)
+                }>
                     <View style={{ width: 80, height: 18, backgroundColor: '#0099CC', borderRadius: 40 }}>
                         <Text style={{ textAlign: 'center', color: '#fff', fontSize: 12 }}>DEACTIVATE</Text>
                     </View>
@@ -68,18 +70,21 @@ class Dashboard extends Component {
     render() {
         return (
             <View>
-
+                { this.state.tableData.length = 0,
+                    this.props.users.users.map((user, index) => {
+                        this.state.tableData.push([user.role, user.firstname, user.lastname, user.phonenumber, user])
+                    })}
                 <DashNavbar navigation={this.props.navigation} />
-                <View style={{height:100, justifyContent:'center', alignItems:'center'}}>
-                    <Text style ={{ fontSize:30}}>Welcome back</Text>
-                    <Text style ={{ fontSize:30}}>Enjoy</Text>
+                <View style={{ height: 100, justifyContent: 'center', alignItems: 'center' }}>
+                    <Text style={{ fontSize: 30 }}>Welcome back</Text>
+                    <Text style={{ fontSize: 30 }}>Enjoy</Text>
                 </View>
 
 
-                
-                    <Table borderStyle={{ borderColor: 'black' }}>
-                        <Row data={this.state.tableHead} style={{ height: 60, backgroundColor: '#0099CC' }} textStyle={{ margin: 6 }} />
-                        <ScrollView >
+
+                <Table borderStyle={{ borderColor: 'black' }}>
+                    <Row data={this.state.tableHead} style={{ height: 60, backgroundColor: '#0099CC' }} textStyle={{ margin: 6 }} />
+                    <ScrollView >
                         {
                             this.state.tableData.map((rowData, index) => (
                                 <TableWrapper key={index} style={{ flexDirection: 'row', backgroundColor: '##F5FFFA' }}>
@@ -91,9 +96,9 @@ class Dashboard extends Component {
                                 </TableWrapper>
                             ))
                         }
-                        </ScrollView>
-                    </Table>
-              
+                    </ScrollView>
+                </Table>
+
 
             </View>
 
