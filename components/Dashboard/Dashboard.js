@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity,Image } from 'react-native';
 import { Button } from 'react-native-elements';
 import DashNavbar from './DashNavbar';
 import { Table, TableWrapper, Row, Cell } from 'react-native-table-component';
 import { fetchUsers, postDeactivatePatient } from '../../redux/ActionCreators'
 import { connect } from 'react-redux';
 import { ScrollView } from 'react-native-gesture-handler';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
 
 
 const mapStateToProps = state => {
@@ -28,7 +30,7 @@ class Dashboard extends Component {
         super(props);
         this.state = {
             tableData: [],
-            tableHead: ['role', 'firstname', 'lastname', 'phone Number', 'Action'],
+            tableHead: ['Role', 'Firstname', 'Lastname', 'Phone Number', 'Action'],
             //stateChanged:0,
         }
         this.deactivatePatient = this.deactivatePatient.bind(this);
@@ -75,9 +77,11 @@ class Dashboard extends Component {
                         this.state.tableData.push([user.role, user.firstname, user.lastname, user.phonenumber, user])
                     })}
                 <DashNavbar navigation={this.props.navigation} />
-                <View style={{ height: 100, justifyContent: 'center', alignItems: 'center' }}>
-                    <Text style={{ fontSize: 30 }}>Welcome back</Text>
-                    <Text style={{ fontSize: 30 }}>Enjoy</Text>
+
+                
+                <View style={{ flexDirection:'row', justifyContent:'center', alignItems:'center',height:100}}>
+                   <Icon name='user' size={30} color='#0000000' style={{margin:10}}/>
+                <Text style={{ fontSize: 20,fontStyle:'italic'}}>Welcome to your dashboard  </Text>
                 </View>
 
 
