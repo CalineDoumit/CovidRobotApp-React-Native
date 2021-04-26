@@ -175,29 +175,29 @@ class DashNavbar extends Component {
 
   render() {
     return (
-      <View style={{borderWidth:4, height:'15%'}}>
+      <View style={{borderWidth:4, height:'10%'}}>
 
-        <View style={{backgroundColor: 'blue', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' , flex:1}}>
-          <TouchableOpacity style={{ margin: 5, borderRadius: 40, backgroundColor: '#4ea8cb', }}
+        <View style={{backgroundColor: 'black', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' , flex:1}}>
+          <TouchableOpacity style={{ margin: 5, }}
             onPress={() => {
               this.togglePatientModal();
             }}
           >
-            <Text>Add Patient</Text>
+            <Text style ={{color:'#FFFFFF'}}>Add Patient</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{ margin: 5, borderRadius: 40, backgroundColor: '#4ea8cb', }}
+          <TouchableOpacity style={{ margin: 5}}
             onPress={() => {
               this.toggleNurseModal();
             }} >
-            <Text>Add Nurse</Text>
+            <Text style ={{color:'#FFFFFF'}}>Add Nurse</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{ margin: 5, borderWidth: 4 }}
+          <TouchableOpacity style={{ margin: 5 }}
             onPress={() => {
               this.toggleAssignModal();
             }} >
-            <Text>Assign Robot</Text>
+            <Text style ={{color:'#FFFFFF'}}>Assign Robot</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{ margin: 5, borderWidth: 4 }}
+          <TouchableOpacity style={{ margin: 5, backgroundColor:'#0099CC',borderRadius:30, width:80 ,alignItems:'center'}}
            onPress={() => {
             this.handleLogout();
         }}>

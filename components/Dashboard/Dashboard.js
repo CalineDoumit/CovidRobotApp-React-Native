@@ -55,7 +55,7 @@ class Dashboard extends Component {
                 <TouchableOpacity onPress={() => //console.log("button")
                 this.deactivatePatient(data)
             }>
-                    <View style={{ width: 80, height: 18, backgroundColor: '#78B7BB', borderRadius: 2 }}>
+                    <View style={{ width: 80, height: 18, backgroundColor: '#0099CC', borderRadius: 40 }}>
                         <Text style={{ textAlign: 'center', color: '#fff', fontSize: 12 }}>DEACTIVATE</Text>
                     </View>
                 </TouchableOpacity>
@@ -70,14 +70,19 @@ class Dashboard extends Component {
             <View>
 
                 <DashNavbar navigation={this.props.navigation} />
+                <View style={{height:100, justifyContent:'center', alignItems:'center'}}>
+                    <Text style ={{ fontSize:30}}>Welcome back</Text>
+                    <Text style ={{ fontSize:30}}>Enjoy</Text>
+                </View>
 
 
-                <ScrollView >
+                
                     <Table borderStyle={{ borderColor: 'black' }}>
-                        <Row data={this.state.tableHead} style={{ height: 60, backgroundColor: '#808B97' }} textStyle={{ margin: 6 }} />
+                        <Row data={this.state.tableHead} style={{ height: 60, backgroundColor: '#0099CC' }} textStyle={{ margin: 6 }} />
+                        <ScrollView >
                         {
                             this.state.tableData.map((rowData, index) => (
-                                <TableWrapper key={index} style={{ flexDirection: 'row', backgroundColor: '#FFF1C1' }}>
+                                <TableWrapper key={index} style={{ flexDirection: 'row', backgroundColor: '##F5FFFA' }}>
                                     {
                                         rowData.map((cellData, cellIndex) => (
                                             <Cell key={cellIndex} data={cellIndex === 4 ? this.element(cellData, index) : cellData} textStyle={{ margin: 6, height: 40 }} />
@@ -86,8 +91,9 @@ class Dashboard extends Component {
                                 </TableWrapper>
                             ))
                         }
+                        </ScrollView>
                     </Table>
-                </ScrollView>
+              
 
             </View>
 

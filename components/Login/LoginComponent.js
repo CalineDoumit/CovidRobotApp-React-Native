@@ -3,9 +3,10 @@ import { Avatar, Button, Input, CheckBox } from 'react-native-elements';
 import { Auth } from "../../redux/auth";
 import { loginUser } from '../../redux/ActionCreators';
 import { connect } from "react-redux";
-import { View,StyleSheet,TextInput } from 'react-native';
+import { View, StyleSheet, TextInput, Text } from 'react-native';
 import { ScrollView } from "react-native-gesture-handler";
 import Navigation from '../Navigation'
+import { FontAwesome } from 'react-native-fontawesome'
 // https://docs.expo.io/versions/latest/sdk/securestore/
 import * as SecureStore from 'expo-secure-store';
 // https://docs.expo.io/versions/v36.0.0/sdk/permissions/
@@ -41,30 +42,30 @@ class Login extends Component {
         this.handleLogin = this.handleLogin.bind(this);
     };
     componentDidMount() {
-        
+
     }
 
-    handleLogin=()=> {
+    handleLogin = () => {
         this.props.loginUser({ username: this.state.username, password: this.state.password })
-            .then(()=>{
-               SecureStore.getItemAsync('userRole')
-               .then((RoleUser)=>{
-                   this.setState({uRole:RoleUser})
-                   console.log("MY USER ROLE: "+ this.state.uRole)
-                   if(this.state.uRole==='nurse'){
-                    this.props.navigation.navigate("NurseMenu")
-                   }
-                   else if (this.state.uRole==='admin'){
-                        console.log("I am a admin")
-                        this.props.navigation.navigate("Dashboard")
-                   }
-                   else {
-                        console.log("I am a patient")
-                        this.props.navigation.navigate("PatientMenu",{username:this.state.username})
-                   }
-               })
-               .catch((error) => console.log('ERROR', error));
-               
+            .then(() => {
+                SecureStore.getItemAsync('userRole')
+                    .then((RoleUser) => {
+                        this.setState({ uRole: RoleUser })
+                        console.log("MY USER ROLE: " + this.state.uRole)
+                        if (this.state.uRole === 'nurse') {
+                            this.props.navigation.navigate("NurseMenu")
+                        }
+                        else if (this.state.uRole === 'admin') {
+                            console.log("I am a admin")
+                            this.props.navigation.navigate("Dashboard")
+                        }
+                        else {
+                            console.log("I am a patient")
+                            this.props.navigation.navigate("PatientMenu", { username: this.state.username })
+                        }
+                    })
+                    .catch((error) => console.log('ERROR', error));
+
             })
 
     }
@@ -75,28 +76,44 @@ class Login extends Component {
         return (
             <ScrollView>
 
-                <View>
-                    <Avatar src="" style={{ marginLeft: 200, marginBottom: 40 }} />
-                    <TextInput
-                    placeholder="Username"
-                    leftIcon={{ type: 'font-awesome', name: 'user-o' }}
-                    onChangeText={(user) => this.setState({username:user})}
-                    />
+                <View style={{ justifyContent: 'space-around', alignItems: 'center' }}>
+                    <View style={{ marginTop: 40, marginBottom: 40 }}>
+                        <Avatar
+                            rounded
+                            size="xlarge"
+                            source={require('./avatar.png')}
 
-                <TextInput
-                    placeholder="Password"
-                    secureTextEntry={true}
-                    leftIcon={{ type: 'font-awesome', name: 'key' }}
-                    onChangeText={(password) => this.setState({password:password})}
-                    />
-                
-                </View>
 
-                <View>
-                    <Button title="LOGIN" onPress={
-                        //console.log("fetna bl onPress")
-                        this.handleLogin
-                    } />
+                        />
+                    </View>
+                    <View style={{ width: '80%' }}>
+
+                        <Input
+                            placeholder="Username"
+                            leftIcon={{ type: 'font-awesome', name: 'user-o' }}
+                            onChangeText={(user) => this.setState({ username: user })}
+                            style={{ width: '80%' }}
+                        />
+
+                    </View>
+                    <View style={{ width: '80%' }}>
+                        <Input
+                            placeholder="Password"
+                            secureTextEntry={true}
+                            leftIcon={{ type: 'font-awesome', name: 'key' }}
+                            onChangeText={(password) => this.setState({ password: password })}
+                        />
+                    </View>
+
+
+                    <View style={{ marginTop: 40, width: '80%' }}>
+                        <Button title="LOGIN" onPress={
+                            //console.log("fetna bl onPress")
+                            this.handleLogin
+                        }
+
+                        />
+                    </View>
                 </View>
 
 
@@ -106,7 +123,7 @@ class Login extends Component {
 }
 
 //export default connect(mapStateToProps, mapDispatchToProps)(Login);
-export default connect(mapStateToProps,mapDispatchToProps)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
 
 
 const styles = StyleSheet.create({
@@ -120,9 +137,9 @@ const styles = StyleSheet.create({
         margin: 20
     },
     image: {
-      margin: 10,
-      width: 80,
-      height: 60
+        margin: 10,
+        width: 80,
+        height: 60
     },
     formInput: {
         margin: 20
