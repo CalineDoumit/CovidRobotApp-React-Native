@@ -108,6 +108,7 @@ class DashNavbar extends Component {
     this.setState({
       showPatientModal: !this.state.showPatientModal
     })
+    this.props.fetchUsers();
   }
 
 
@@ -118,6 +119,7 @@ class DashNavbar extends Component {
     this.setState({
       showAssignModal: !this.state.showAssignModal
     })
+    this.props.fetchUsers();
   }
 
   handleNurseSubmit = () => {
@@ -133,6 +135,8 @@ class DashNavbar extends Component {
     });
     this.toggleNurseModal();
     console.log("button pressed")
+    this.props.fetchUsers();
+
   }
 
   handlePatientSubmit = () => {
@@ -148,8 +152,10 @@ class DashNavbar extends Component {
       dateofBirth: this.state.dateofBirth,
       emergencyContact: this.state.emergencyContact,
     });
+    
     this.togglePatientModal();
     console.log("button pressed")
+
   }
 
   activatePatientRobot(patientId, robotNumber) {

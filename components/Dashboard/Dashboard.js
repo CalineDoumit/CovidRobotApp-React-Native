@@ -84,7 +84,7 @@ class Dashboard extends Component {
 
                 <Table borderStyle={{ borderColor: 'black' }}>
                     <Row data={this.state.tableHead} style={{ height: 60, backgroundColor: '#0099CC' }} textStyle={{ margin: 6 }} />
-                    <ScrollView >
+                    <ScrollView style={{height:'68%'}} >
                         {
                             this.state.tableData.map((rowData, index) => (
                                 <TableWrapper key={index} style={{ flexDirection: 'row', backgroundColor: '##F5FFFA' }}>
