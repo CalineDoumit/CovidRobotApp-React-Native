@@ -69,7 +69,7 @@ class Dashboard extends Component {
         return (
             <View>
 
-                <DashNavbar />
+                <DashNavbar navigation={this.props.navigation} />
 
 
                 <ScrollView >

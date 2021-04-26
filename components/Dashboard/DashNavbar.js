@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import { Text, View, Button, TextInput, TouchableOpacity, Modal, ScrollView } from 'react-native';
 import { Icon } from 'react-native-elements';
-import { postNurse, postPatient, fetchUsers, fetchRobots,postAssign } from '../../redux/ActionCreators'
+import { postNurse, postPatient, fetchUsers, fetchRobots,postAssign,logoutUser } from '../../redux/ActionCreators'
 import { connect } from 'react-redux';
 //import { ScrollView } from "react-native-gesture-handler";
 import DropDownPicker from 'react-native-dropdown-picker'
+
 
 const mapStateToProps = state => {
   return {
@@ -20,6 +21,7 @@ const mapDispatchToProps = (dispatch) => ({
   postAssign: (values) => dispatch(postAssign(values)),
   fetchUsers: () => dispatch(fetchUsers()),
   fetchRobots: () => dispatch(fetchRobots()),
+  logoutUser: () => dispatch(logoutUser()),
 
 
 })
@@ -60,6 +62,7 @@ class DashNavbar extends Component {
     //this.activatePatientRobot = this.activatePatientRobot.bind(this);
     this.makeListPatients = this.makeListPatients.bind(this);
     this.makeListRooms = this.makeListRooms.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
   };
 
   componentDidMount() {
@@ -67,6 +70,10 @@ class DashNavbar extends Component {
     this.props.fetchRobots();
 
   }
+  handleLogout=()=>{
+    this.props.logoutUser();
+    this.props.navigation.navigate('Login')
+}
 
   makeListPatients() {
     this.state.listOfInactivePatients.length = 0
@@ -191,7 +198,9 @@ class DashNavbar extends Component {
             <Text>Assign Robot</Text>
           </TouchableOpacity>
           <TouchableOpacity style={{ margin: 5, borderWidth: 4 }}
-          >
+           onPress={() => {
+            this.handleLogout();
+        }}>
             <Text>Logout</Text>
           </TouchableOpacity>
         </View>
