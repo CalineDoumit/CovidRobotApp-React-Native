@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Text, View, Button, TextInput, TouchableOpacity, Modal, ScrollView } from 'react-native';
-import { Icon } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { postNurse, postPatient, fetchUsers, fetchRobots,postAssign,logoutUser } from '../../redux/ActionCreators'
 import { connect } from 'react-redux';
 //import { ScrollView } from "react-native-gesture-handler";
@@ -81,7 +81,7 @@ class DashNavbar extends Component {
 
       if (user.isActive == false) {
         console.log("user: " + JSON.stringify(user))
-        this.state.listOfInactivePatients.push({ label: user.firstname, value: user.patient, icon: () => <Icon name="flag" size={18} color="#900" /> })
+        this.state.listOfInactivePatients.push({ label: user.firstname, value: user.patient, icon: () => <Icon name="user" size={18} color="#0099CC" /> })
       }
     })
   }
@@ -90,7 +90,7 @@ class DashNavbar extends Component {
     this.state.listOfInactiveRooms.length = 0
     this.props.robots.robots.map((robot) => {
       if (robot.isOccupied == false) {
-        this.state.listOfInactiveRooms.push({ label: robot.roomNumber, value: robot.number })
+        this.state.listOfInactiveRooms.push({ label: robot.roomNumber, value: robot.number, icon: () => <Icon name="h-square" size={18} color="#0099CC" /> })
       }
     })
   }
@@ -215,7 +215,10 @@ class DashNavbar extends Component {
           onDismiss={this.togglePatientModal}
           onRequestClose={() => this.togglePatientModal()}>
           <View>
-            <Text>ADD PATIENT</Text>
+            <View style={{alignItems:'center',backgroundColor:'#0099CC', height:50, justifyContent:'center'}}>
+            <Text style ={{fontSize:25, color:'white'}}>ADD PATIENT</Text>
+            </View>
+            
             <ScrollView>
               <TextInput
                 placeholder='Username'
@@ -343,10 +346,11 @@ class DashNavbar extends Component {
               />
 
 
-
-              <TouchableOpacity style={{ borderWidth: 4, width: 100, alignSelf: 'center' }} onPress={this.handlePatientSubmit}>
-                <Text>SUBMIT</Text>
+<View style={{alignItems:'center'}}>
+              <TouchableOpacity style={{ margin: 5, backgroundColor:'#0099CC',borderRadius:30, width:150,height:50 ,alignItems:'center',justifyContent:'center'}} onPress={this.handlePatientSubmit}>
+                <Text style={{color:'white',fontSize:20}}>SUBMIT</Text>
               </TouchableOpacity>
+              </View>
             </ScrollView>
 
           </View>
@@ -358,7 +362,9 @@ class DashNavbar extends Component {
 
           }>
           <View>
-            <Text>ADD NURSE</Text>
+          <View style={{alignItems:'center',backgroundColor:'#0099CC', height:50, justifyContent:'center'}}>
+            <Text style ={{fontSize:25, color:'white'}}>ADD NURSE</Text>
+            </View>
             <TextInput
               placeholder='Username'
               leftIcon={
@@ -432,10 +438,11 @@ class DashNavbar extends Component {
               onChangeText={(value) => this.setState({ description: value })}
               style={{ margin: 10 }}
             />
-
-            <TouchableOpacity style={{ borderWidth: 4, width: 100, alignSelf: 'center' }} onPress={this.handleNurseSubmit}>
-              <Text>SUBMIT</Text>
+<View style={{alignItems:'center'}}>
+            <TouchableOpacity style={{ margin: 5, backgroundColor:'#0099CC',borderRadius:30, width:150,height:50 ,alignItems:'center',justifyContent:'center'}} onPress={this.handleNurseSubmit}>
+              <Text style={{color:'white',fontSize:20}} >SUBMIT</Text>
             </TouchableOpacity>
+            </View>
 
           </View>
         </Modal>
@@ -447,12 +454,14 @@ class DashNavbar extends Component {
           }>
 
           <View>
-            <Text style={{ marginBottom: 30 }}>ASSIGN A PATIENT TO A ROOM</Text>
+          <View style={{alignItems:'center',backgroundColor:'#0099CC', height:50, justifyContent:'center',marginBottom:200}}>
+            <Text style ={{fontSize:25, color:'white'}}>ASSIGN A PATIENT TO A ROOM</Text>
+            </View>
             <DropDownPicker
               placeholder='Select a patient'
               items={this.state.listOfInactivePatients}
               //defaultValue={this.state.country}
-              containerStyle={{ height: 40 }}
+              containerStyle={{ height: 40,marginBottom:10 }}
               style={{ backgroundColor: '#fafafa' }}
               itemStyle={{
                 justifyContent: 'flex-start'
@@ -473,11 +482,12 @@ class DashNavbar extends Component {
               dropDownStyle={{ backgroundColor: '#fafafa' }}
               onChangeItem={item =>this.setState({chosenRobotid : item.value})}
             />
-            <TouchableOpacity style={{ margin: 10, borderRadius: 40, backgroundColor: '#4ea8cb', }}
+            <View style={{alignItems:'center', marginTop:20}}>
+            <TouchableOpacity style={{ margin: 50, backgroundColor:'#0099CC',borderRadius:30, width:150,height:50 ,alignItems:'center',justifyContent:'center'}}
             onPress={this.handleAssignSubmit} >
-              <Text>Submit</Text>
+              <Text style={{color:'white',fontSize:20}}>Submit</Text>
             </TouchableOpacity>
-
+</View>
           </View>
 
         </Modal>
