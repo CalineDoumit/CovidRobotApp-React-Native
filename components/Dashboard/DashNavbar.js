@@ -3,7 +3,6 @@ import { Text, View, Button, TextInput, TouchableOpacity, Modal, ScrollView } fr
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { postNurse, postPatient, fetchUsers, fetchRobots,postAssign,logoutUser } from '../../redux/ActionCreators'
 import { connect } from 'react-redux';
-//import { ScrollView } from "react-native-gesture-handler";
 import DropDownPicker from 'react-native-dropdown-picker'
 
 
@@ -155,12 +154,11 @@ class DashNavbar extends Component {
     
     this.togglePatientModal();
     console.log("button pressed")
+    this.props.fetchUsers();
 
   }
 
   activatePatientRobot(patientId, robotNumber) {
-    //alert("patient ID: " + patientId)
-    //alert("robot number " + robotNumber)
     this.props.postAssign({ patientId: patientId, robotnumber: robotNumber });
   }
 

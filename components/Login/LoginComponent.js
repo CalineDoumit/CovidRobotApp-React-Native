@@ -50,7 +50,7 @@ class Login extends Component {
             .then(() => {
                 SecureStore.getItemAsync('userRole')
                     .then((RoleUser) => {
-                        this.setState({ uRole: RoleUser })
+                        this.setState({ uRole: RoleUser,password:'',username:'' })
                         console.log("MY USER ROLE: " + this.state.uRole)
                         if (this.state.uRole === 'nurse') {
                             this.props.navigation.navigate("NurseMenu")
@@ -61,7 +61,8 @@ class Login extends Component {
                         }
                         else {
                             console.log("I am a patient")
-                            this.props.navigation.navigate("PatientMenu", { username: this.state.username })
+                            this.props.navigation.navigate("PatientMenu", { user: this.props.auth.user})
+
                         }
                     })
                     .catch((error) => console.log('ERROR', error));

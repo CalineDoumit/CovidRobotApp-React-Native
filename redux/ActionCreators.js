@@ -18,7 +18,6 @@ export const fetchRobots = () => (dispatch) => {
     },
       error => {
         var errmess = new Error(error.message);
-        console.log("erreur 2: errmess");
 
         throw errmess;
       })
@@ -98,27 +97,17 @@ export const loginUser = (creds) => (dispatch) => {
       } else {
         var error = new Error('Error ' + response.status + ': ' + response.statusText);
         error.response = response;
-        console.log("ERRORRRRR 1111111111111111111111111111")
         throw error;
       }
     },
       error => {
-        console.log("ERRORRRRR 2222222222222222222222222")
-
         throw error;
       })
     .then(response => response.json())
     .then(response => {
       if (response.success) {
-        console.log("responseToken: "+response.token )
-        // If login was successful, set the token in local storage
-        //localStorage.setItem('token', response.token);
-        //localStorage.setItem('creds', JSON.stringify(creds));
-        //localStorage.setItem('userRole', response.userRole);
-        // Dispatch the success action
         SecureStore.setItemAsync('token',response.token)
         .then((userToken)=>{
-          //console.log("token : "+userToken)
           SecureStore.getItemAsync('token')
           .then((userT)=>{
             console.log("userT: "+userT)
@@ -131,6 +120,7 @@ export const loginUser = (creds) => (dispatch) => {
         .catch((error) => console.log('Could not save user creds', error));
         SecureStore.setItemAsync('userRole',response.userRole)
         .catch((error) => console.log('Could not save user role', error));
+
         
         dispatch(receiveLogin(response));
         console.log("----------------------------");
@@ -157,7 +147,8 @@ export const requestLogin = (creds) => {
 export const receiveLogin = (response) => {
   return {
     type: ActionTypes.LOGIN_SUCCESS,
-    token: response.token
+    token: response.token,
+    user:response.user
   }
 }
 
@@ -420,7 +411,6 @@ export const postNurse = (values) => (dispatch) => {
         })
       .then(response => response.json())
       .then(users => dispatch(addInactiveUsers(users)))
-     //.catch(error => dispatch(robotsFailed(error.message)));
   }
 
   export const addInactiveUsers = (users) => ({
@@ -454,8 +444,6 @@ export const logoutUser = () => (dispatch) => {
 
 
 export const fetchCorrespondingPatient = (robotId) => (dispatch) => {
-  //dispatch(patientsLoading());
-  //alert("robotID: "+ robotId)
   return fetch(baseUrl +'robots/'+robotId+ '/getCorrespondingPatient')
     .then(response => {
       if (response.ok) {
@@ -486,9 +474,7 @@ export const addCorrespondingPatient = (patient) => {
 
 
 export const fetchCorrespondingUser = (robotId) => (dispatch) => {
-  //dispatch(patientsLoading());
-  //alert("robotID: "+ robotId)
-  //alert("fetna bl fetch")
+  console.log("fetna bl fetch")
   return fetch(baseUrl +'robots/'+robotId+ '/getCorrespondingUser')
     .then(response => {
       if (response.ok) {
@@ -545,3 +531,42 @@ export const postAssign = (values) => (dispatch) => {
     .then(() => { console.log("Activated"); })
     .catch(error => {console.log("Activated Error"+ error.message)})
 }
+
+export const fetchNurses = () => (dispatch) => {
+  dispatch(nursesLoading());
+
+  return fetch(baseUrl + 'nurses')
+    .then(response => {
+      if (response.ok) {
+        return response;
+      } else {
+        var error = new Error('Error ' + response.status + ': ' + response.statusText);
+        error.response = response;
+        throw error;
+      }
+    },
+      error => {
+        var errmess = new Error(error.message);
+        console.log("erreur 2: errmess");
+
+        throw errmess;
+      })
+    .then(response => response.json())
+    .then(nurses => dispatch(addNurses(nurses)))
+    .catch(error => dispatch(usersFailed(error.message)));
+}
+
+
+export const nursesLoading = () => ({
+  type: ActionTypes.NURSES_LOADING
+});
+
+export const nursesFailed = (errmess) => ({
+  type: ActionTypes.NURSES_FAILED,
+  payload: errmess
+});
+
+export const addNurses = (nurses) => ({
+  type: ActionTypes.ADD_NURSES,
+  payload: nurses
+})

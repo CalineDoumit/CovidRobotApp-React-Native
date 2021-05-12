@@ -31,7 +31,6 @@ class Dashboard extends Component {
         this.state = {
             tableData: [],
             tableHead: ['Role', 'Firstname', 'Lastname', 'Phone Number', 'Action'],
-            //stateChanged:0,
         }
         this.deactivatePatient = this.deactivatePatient.bind(this);
     }
@@ -56,7 +55,7 @@ class Dashboard extends Component {
     element = (data) => (
         data.role === 'patient' ?
             data.isActive == true ?
-                <TouchableOpacity onPress={() => //console.log("button")
+                <TouchableOpacity onPress={() => 
                     this.deactivatePatient(data)
                 }>
                     <View style={{ width: 80, height: 18, backgroundColor: '#0099CC', borderRadius: 40 }}>

@@ -21,28 +21,6 @@ const mapDispatchToProps = dispatch => ({
 })
 
 
-
-// Drawer navigator can be replaced by TabNavigator
-/*const MainNavigator = createDrawerNavigator({
-  Home: {
-    screen: HomeNavigator,
-  },
-  Menu: {
-    screen: MenuNavigator,
-  },
-  Contact : {
-    screen : ContactNavigator
-  },
-  About : {
-    screen : AboutNavigator
-  },
-  Reservation: {
-    screen : ReservationNavigator
-  }
-});
-*/
-//const MainContainer = createAppContainer(MainNavigator);
-
 class Main extends Component {
   componentDidMount() {
     this.props.fetchRobots();

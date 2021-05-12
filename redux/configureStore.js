@@ -5,6 +5,7 @@ import { Patients } from './patients';
 import { Robots } from './robots';
 import { Auth } from './auth';
 import { Users } from './users';
+import {Nurses} from './nurses'
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { persistStore, persistCombineReducers } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -24,7 +25,8 @@ export const ConfigureStore = () => {
             patients:Patients,
             robots:Robots,
             auth:Auth,
-            users:Users
+            users:Users,
+            nurses:Nurses
         }),
          composeWithDevTools(
             applyMiddleware(thunk, logger),

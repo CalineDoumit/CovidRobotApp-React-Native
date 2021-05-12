@@ -18,7 +18,8 @@ export default class App extends React.Component {
       </Provider>
     );*/
 
-
+    console.ignoredYellowBox = ['Warning: Each', 'Warning: Failed'];
+    console.disableYellowBox = true;
     return (
       <Provider store={store}>
          <PersistGate 

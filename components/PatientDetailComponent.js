@@ -1,10 +1,10 @@
 import {
     Card, CardImg, CardBody,
-    CardTitle, Text
+    CardTitle, Text, ThemeConsumer
 } from 'react-native-elements';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchCorrespondingPatient, fetchCorrespondingUser, fetchRobotGo, fetchRobotCome, fetchRobotStop } from '../redux/ActionCreators';
+import { fetchCorrespondingPatient, fetchCorrespondingUser, fetchRobotGo, fetchRobotCome, fetchRobotStop, fetchRobots, fetchPatients,fetchUsers } from '../redux/ActionCreators';
 import { View, TouchableOpacity, ScrollView, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Table, TableWrapper, Row, Cell } from 'react-native-table-component';
@@ -16,7 +16,7 @@ const mapStateToProps = state => {
     return {
         robots: state.robots,
         patients: state.patients,
-        users: state.user,
+        users: state.users,
     }
 }
 
@@ -25,7 +25,13 @@ const mapDispatchToProps = dispatch => ({
     fetchCorrespondingUser: (robotId) => dispatch(fetchCorrespondingUser(robotId)),
     fetchRobotGo: (robotId) => { dispatch(fetchRobotGo(robotId)) },
     fetchRobotCome: (robotId) => { dispatch(fetchRobotCome(robotId)) },
-    fetchRobotStop: (robotId) => { dispatch(fetchRobotStop(robotId)) }
+    fetchRobotStop: (robotId) => { dispatch(fetchRobotStop(robotId)) },
+    fetchRobots: () => { dispatch(fetchRobots()) },
+    fetchUsers: () => { dispatch(fetchUsers()) },
+    
+
+
+
 })
 
 
@@ -34,10 +40,9 @@ class PatientDetail extends Component {
     componentDidMount() {
         this.props.fetchCorrespondingPatient(this.props.navigation.getParam('robotId', ''));
         this.props.fetchCorrespondingUser(this.props.navigation.getParam('robotId', ''));
-        //console.log("firstname in didMount",this.props.users.correspondingUser)
         this.state.tableData.length = 0,
-            this.props.patients.correspondingPatient.temperatures.map((user) => {
-                this.state.tableData.push([user])
+            this.props.patients.correspondingPatient.temperatures.map((patient) => {
+                this.state.tableData.push([patient])
             })
 
     }
@@ -45,8 +50,10 @@ class PatientDetail extends Component {
         super(props);
         this.state = {
             myrobot: this.props.robots.robots.filter((robot) => robot._id === this.props.navigation.getParam('robotId', ''))[0],
+            myuser: null,
             tableData: [],
             tableHead: ['Temperature'],
+            
         }
         this.RobotGo = this.RobotGo.bind(this);
         this.RobotCome = this.RobotCome.bind(this);
@@ -61,28 +68,37 @@ class PatientDetail extends Component {
     RobotGo(robotId) {
         console.log("patient ID: " + robotId)
         this.props.fetchRobotGo(robotId);
-        //alert("patient id: " + robotId)
     }
 
     RobotCome(robotId) {
         console.log("patient ID: " + robotId)
         this.props.fetchRobotCome(robotId);
-        //alert("patient id: " + robotId)
     }
 
     RobotStop(robotId) {
         console.log("patient ID: " + robotId)
         this.props.fetchRobotStop(robotId);
-        // alert("patient id: " + robotId)
     }
 
+
     render() {
+        /*setTimeout(
+            function() {
+                this.props.fetchRobots();
+            }
+            .bind(this),
+            1000
+          );*/
         {
             this.state.tableData.length = 0,
                 this.props.patients.correspondingPatient.temperatures.map((user) => {
                     this.state.tableData.push([user])
                 })
         }
+        this.props.users.users.filter((user) => {
+            if (user.patient === this.props.patients.correspondingPatient._id)
+                this.setState({myuser:user})
+        })
         const robotId = this.props.navigation.getParam('robotId', '');
         return (
 
@@ -120,25 +136,18 @@ class PatientDetail extends Component {
                         </TouchableOpacity>
                     </View>
 
-<View style={{margin:5}}>
-                    <Text style={{fontStyle:'italic'}}>Robot is {this.state.myrobot.position}</Text>
-                    {this.state.myrobot.isObstacle === true ?
-                        <Text style={{fontStyle:'italic'}}> No Obstacles Found</Text>
-                        :
-                        <Text style={{fontStyle:'italic'}}>Obstacles Found</Text>
+                    <View style={{ margin: 5 }}>
+
+                        <Text style={{ fontStyle: 'italic' }}>Robot is {this.state.myrobot.position}</Text>
+                        {this.state.myrobot.isObstacle === true ?
+                            alert("Obstacle Found")
+                            :
+                            <Text style={{ fontStyle: 'italic' }}>No Obstacles Found</Text>
 
 
-                    }
-</View>
-                    <View style={{ width: "100%", backgroundColor: '#0099CC', height: 40, justifyContent: 'flex-start', flexDirection: 'row', alignItems: 'center' }} >
-                        <Icon name="user" size={30} color='#FFFFFF' />
-                        <Text style={{ fontSize: 25, fontWeight: "bold", color: 'white' }}> Patient </Text>
+                        }
                     </View>
-                    <Text style={{ fontSize: 15 }}>firstname lastname </Text>
-                    <View style={{ flexDirection: 'row' }}>
-                        <Text style={{ fontSize: 15 }}>phone number  </Text>
-                    </View>
-                    <Text style={{ marginBottom: 20, fontSize: 15 }}>Emergency Contact : {this.props.patients.correspondingPatient.emergencyContact} </Text>
+                    <Text style={{ marginBottom: 20, fontSize: 15 }}> {this.props.patients.correspondingPatient.emergencyContact} </Text>
 
 
                     <View style={{ marginBottom: 20 }}>
@@ -192,5 +201,5 @@ class PatientDetail extends Component {
     }
 
 }
-//export default connect(mapStateToProps)(Home);
+
 export default connect(mapStateToProps, mapDispatchToProps)(PatientDetail);
